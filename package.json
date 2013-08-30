@@ -1,0 +1,22 @@
+{
+  "name": "tcmonitor",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "snmp-native": "1.x",
+    "validator": "*",
+    "mysql": "*",
+    "async": "*",
+    "express": "3.3.4",
+    "ejs": "*",
+    "stylus": "*"
+  },
+  "//": [
+    "https://npmjs.org/package/snmp-native",
+    "https://github.com/chriso/node-validator",
+    "https://github.com/caolan/async"
+  ]
+}
