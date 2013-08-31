@@ -1,11 +1,11 @@
 var snmp = require('snmp-native');
-var oids = require('./oids.js');
 require("./additions.js");
 
 SnmpMonitorMethods = {};
 SnmpMonitorMethods.fetchSystemDescr = function(session, callback){
-  session.get({ oid: oids['system']['descr'] }, function (err, varbind) {
-    callback(err, varbind);
+  session.get({ oid: '.1.3.6.1.2.1.1.1.0' }, function (err, result) {
+    if(err) return callback(err, result);
+    return callback(null, result[0].value);
   });
 };
 
@@ -137,6 +137,7 @@ SnmpMonitorMethods.fetchMemoryUsage = function(session, callback){
   });
 };
 
+
 SnmpMonitorMethods.fetchNetworkTraffic = function(session, callback){
   var fetchNetworkTrafficOctets = function(oids, callback){
     session.getAllParallell({oids:oids}, function(err, result){
@@ -185,6 +186,20 @@ SnmpMonitorMethods.fetchNetworkTraffic = function(session, callback){
     });
   });
 };
+
+
+
+SnmpMonitorMethods.fetchLoadAverage = function(session, callback){
+  var oids = ['.1.3.6.1.4.1.2021.10.1.3.1', '.1.3.6.1.4.1.2021.10.1.3.2', '.1.3.6.1.4.1.2021.10.1.3.3'];
+  session.getAllParallell({oids:oids}, function(err, result){
+    if(err) return callback(err);
+    return callback(null, {
+      load_1: result[0].value,
+      load_5: result[1].value,
+      load_15: result[2].value,
+    });
+  });
+}
 
 
 

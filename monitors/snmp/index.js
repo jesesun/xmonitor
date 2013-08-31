@@ -41,7 +41,7 @@ SnmpMonitor.fetch = function(app, itemId){
   SnmpMonitorMethods.fetchSystemDescr(session, function(err, result){
     console.log(result);
   });
-  SnmpMonitorMethods.fetchNetworkTraffic(session, function(err, result){
+  SnmpMonitorMethods.fetchLoadAverage(session, function(err, result){
     console.log(result);
   });
 };
