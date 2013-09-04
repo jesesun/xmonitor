@@ -5,7 +5,10 @@ SnmpMonitorMethods = {};
 SnmpMonitorMethods.fetchSystemDescr = function(session, callback){
   session.get({ oid: '.1.3.6.1.2.1.1.1.0' }, function (err, result) {
     if(err) return callback(err, result);
-    return callback(null, result[0].value);
+    var desc = result[0].value;
+    var matches = desc.match(/^Linux.* ([\d\.]+-[^ ]+).*(x86_64|x86_32)$/);
+    if (matches) desc = "Linux "+ matches[1] + " " + matches[2];
+    return callback(null, desc);
   });
 };
 
@@ -170,19 +173,49 @@ SnmpMonitorMethods.fetchNetworkTraffic = function(session, callback){
           fetchNetworkTrafficOctets(oids, function(err, octes){
             if(err) return callback(err);
             var currentNetworkOctes = octes;
+            // console.log(currentNetworkOctes);
+            // console.log(previousNetworkOctes);
             var result = {};
             for (var i = 0; i < deviceNames.length; i++) {
               var inOctes = currentNetworkOctes[i*2] - previousNetworkOctes[i*2];
               var outOctes = currentNetworkOctes[i*2+1] - previousNetworkOctes[i*2+1];
               result[deviceNames[i]] = {
-                in: inOctes/frequency,
-                out: outOctes/frequency,
+                in: Math.round(inOctes/frequency),
+                out: Math.round(outOctes/frequency),
               }
             }
             return callback(null, result);
           });
         }, frequency*1000);
       });
+    });
+  });
+};
+
+
+SnmpMonitorMethods.fetchDiskUsage = function(session, callback){
+  session.getSubtree({oid:'.1.3.6.1.2.1.25.2.3.1.2‎'}, function(err, result){ // get network devices
+    if(err) return callback(err);
+    var diskSuffixes = []; // get the disk oid suffix
+    for(var i=0; i<result.length; i++){
+      if(result[i].value[result[i].value.length-1] === 4){
+        diskSuffixes.push(result[i].oid[result[i].oid.length-1]);
+      }
+    }
+    var oids = [];
+    for(var i=0; i<diskSuffixes.length; i++){
+      oids.push(".1.3.6.1.2.1.25.2.3.1.3."+diskSuffixes[i]); // hrStorageDescr
+      oids.push(".1.3.6.1.2.1.25.2.3.1.4."+diskSuffixes[i]); // hrStorageAllocationUnits
+      oids.push(".1.3.6.1.2.1.25.2.3.1.5."+diskSuffixes[i]); // hrStorageSize
+      oids.push(".1.3.6.1.2.1.25.2.3.1.6."+diskSuffixes[i]); // hrStorageUsed
+    }
+    session.getAllParallell({oids:oids}, function(err, result){
+      if(err) return callback(err);
+      var diskUsages = {};
+      for(var i=0; i<diskSuffixes.length; i++){
+        diskUsages[result[i*4].value] = {units:result[i*4+1].value, size:result[i*4+2].value, used:result[i*4+3].value};
+      }
+      return callback(null, diskUsages);
     });
   });
 };
