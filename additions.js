@@ -1,3 +1,9 @@
+var Mysql = require('mysql');
+var Pool = require('mysql/lib/Pool');
+var fs = require('fs');
+var async = require('async');
+
+
 if(String.prototype.md5==undefined){
 	String.prototype.md5 = function(){
 		var hash = require('crypto').createHash('md5');
@@ -64,7 +70,6 @@ if(console.debug==undefined){
 
 
 
-var fs = require('fs');
 if(fs.mkdirs==undefined){
   fs.mkdirs = function(path, mode, callback){
     if (typeof mode === 'function'){
@@ -92,3 +97,41 @@ if(fs.mkdirs==undefined){
     walk();
   };
 }
+
+if(Pool.prototype.getConnectionAndQuery==undefined){
+  Pool.prototype.getConnectionAndQuery = function(sql, params, callback){
+    if(params && typeof params=='function'){
+      callback = params;
+      params = [];
+    }
+    self = this;
+    self.getConnection(function(err, connection) {
+      if(err && callback) return callback(err);
+      connection.query(sql, params, function(err, rows){
+        self.releaseConnection(connection);
+        if(callback) return callback(err, rows);
+      });
+    });
+  }
+}
+if(Pool.prototype.getConnectionAndQueryAllParallell==undefined){
+  Pool.prototype.getConnectionAndQueryAllParallell = function(sqls, callback){
+    self = this;
+    async.map(sqls, function(sql, callback){
+      if(!sql || sql=="") return callback();
+      self.getConnectionAndQuery(sql, function(err, rows){
+        return callback(err, rows);
+      });
+    }, function(err, results){
+      return callback(err, results);
+    });
+  }
+}
+
+
+
+
+
+
+
+
