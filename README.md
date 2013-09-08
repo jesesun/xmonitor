@@ -18,6 +18,7 @@ How to
 First of all, you must install nodejs and mysql
 
 Then
-Step 1: npm install
-Step 2: cp config.js.example to config.js and create you database
+
+* Step 1: npm install
+* Step 2: cp config.js.example to config.js and create you database
 
