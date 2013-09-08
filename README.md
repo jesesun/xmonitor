@@ -12,3 +12,12 @@ It's designed to include theses features:
 First, we will implement the basic framework and snmp monitor. This is what we are doing right now.
 
 
+How to
+=======
+
+First of all, you must install nodejs and mysql
+
+Then
+Step 1: npm install
+Step 2: cp config.js.example to config.js and create you database
+

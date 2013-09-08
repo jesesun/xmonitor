@@ -1,2 +1,4 @@
 node_modules
+scripts
 npm-debug.log
+config.js
