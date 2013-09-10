@@ -1,0 +1,67 @@
+
+<div class="row">
+  <div class="col-md-2">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">Groups</h1>
+      </div>
+      <div class="panel-body" style="text-align:center">
+        Your can organize your servers by groups.<br/><br/>
+        <a class="btn btn-primary">Create one now &gt;</a>
+        <!-- <div class="list-group">
+          <a href="#" class="list-group-item active">as</a>
+          <a href="#" class="list-group-item">abc</a>
+          <a href="#" class="list-group-item">efgghh</a>
+          <a href="#" class="list-group-item">abc</a>
+          <a href="#" class="list-group-item">abc</a>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="col-md-10">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">SNMP monitor items</h1>
+      </div>
+      <div class="panel-body">
+        <table class='table'>
+          <thead><tr>
+            <th><input type="checkbox" /></th>
+            <th>&nbsp;</th>
+            <th>Server</th>
+            <th>Interval</th>
+            <th style="width:15%">CPU</th>
+            <th style="width:15%">Memory</th>
+            <th style="width:15%">Load Average</th>
+          </tr></thead>
+          <tbody>
+            <% for(var i=0; i<items.length; i++){ %><tr>
+              <td><input type="checkbox" /></td>
+              <td>Running</td>
+              <td><a href='/monitors/<%= items[i].id %>'>(<%= items[i].host %>)</a></td>
+              <td>One minute</td>
+              <td><div class="progress">
+                <div class="progress-bar <%= 
+                  items[i].cpu>7500?(items[i].cpu<9000?'progress-bar-warning':'progress-bar-danger'):''
+                %>" style="width: <%- items[i].cpu/100 %>%;"></div>
+                <span><%- Math.round(items[i].cpu/10)/10 %>%</span>
+              </div></td>
+              <td><div class="progress">
+                <div class="progress-bar <%= 
+                  items[i].memory>7500?(items[i].memory<9000?'progress-bar-warning':'progress-bar-danger'):''
+                %>" style="width: <%- items[i].memory/100 %>%;"></div>
+                <span><%- Math.round(items[i].memory/10)/10 %>%</span>
+              </div></td>
+              <td><div class="progress">
+                <div class="progress-bar <%= 
+                  items[i].memory>7500?(items[i].load<9000?'progress-bar-warning':'progress-bar-danger'):''
+                %>" style="width: <%- items[i].load/100 %>%;"></div>
+                <span><%- Math.round(items[i].load/10)/10 %>%</span>
+              </div></td>
+            </tr><% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

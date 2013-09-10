@@ -32,6 +32,8 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.get('/monitors', require('./routes/monitor.js').index);
+app.get(/\/monitors\/([a-z]+)\/?/, require('./routes/monitor.js').list);
 app.get('/users', user.list);
 app.dbPool = require('mysql').createPool(require('./config.js').db);
 

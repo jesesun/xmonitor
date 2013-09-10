@@ -1,3 +1,24 @@
 body {
   padding: 30px;
 }
+
+
+th{
+  text-align: center;
+}
+
+td .progress{
+  margin-bottom: 0;
+  text-align: center;
+  position: relative;
+  font-family: Verdana;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+td .progress span{
+  position: absolute;
+  width: 100%;
+  display: block;
+}
