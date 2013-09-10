@@ -12,7 +12,8 @@
     "async": "*",
     "express": "3.3.4",
     "ejs": "*",
-    "stylus": "*"
+    "stylus": "*",
+    "express-partials": "*"
   },
   "//": [
     "https://npmjs.org/package/snmp-native",
